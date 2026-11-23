@@ -23,6 +23,13 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Generate Android and iOS app icons
+        run: |
+          python -m pip install --quiet cairosvg
+          mkdir -p icons
+          python -c "import cairosvg; [cairosvg.svg2png(url='icon.svg', write_to=f'icons/icon-{n}.png', output_width=n, output_height=n) for n in (192, 512)]"
+          test -s icons/icon-192.png
+          test -s icons/icon-512.png
       - name: Package website
         uses: actions/upload-pages-artifact@v3
         with:
