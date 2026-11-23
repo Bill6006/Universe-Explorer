@@ -2,7 +2,11 @@
 
 Explore the universe from your phone or computer using the original interactive WebGL explorer.
 
-**Website:** https://bill6006.github.io/Universe-Explorer/
+**Open now (temporary preview):** https://raw.githack.com/Bill6006/Universe-Explorer/main/index.html
+
+**Permanent GitHub Pages website (requires one-time setup):** https://bill6006.github.io/Universe-Explorer/
+
+To activate the permanent site: open [repository Settings → Pages](https://github.com/Bill6006/Universe-Explorer/settings/pages), select **GitHub Actions** as the publishing source, then re-run **Publish Universe Explorer** under Actions. This repository is already configured to publish automatically on future updates.
 
 ## Add to your Android home screen
 
