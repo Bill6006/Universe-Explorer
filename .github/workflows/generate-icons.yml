@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Render PNG icons from selected 2D artwork
         run: |
           python -m pip install --quiet Pillow
@@ -32,5 +34,6 @@ jobs:
           git add icons/icon-192.png icons/icon-512.png
           if ! git diff --cached --quiet; then
             git commit -m "Build Android and iOS home screen icons"
+            git pull --rebase origin main
             git push origin HEAD:main
           fi
