@@ -1,0 +1,22 @@
+name: Check Preview URL
+on:
+  push:
+    paths:
+      - .github/workflows/check-preview.yml
+  workflow_dispatch:
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check HTML and app icon availability
+        run: |
+          set -euo pipefail
+          base=https://raw.githack.com/Bill6006/Universe-Explorer/main
+          curl --fail --location --retry 3 --retry-delay 2 --max-time 45 --dump-header /tmp/headers -o /tmp/index.html "$base/index.html"
+          grep -qi 'content-type: text/html' /tmp/headers
+          grep -q '<title>Universe Explorer</title>' /tmp/index.html
+          curl --fail --location --retry 3 --max-time 45 -o /tmp/manifest "$base/manifest.webmanifest"
+          grep -q '"short_name": "Universe"' /tmp/manifest
+          curl --fail --location --retry 3 --max-time 45 -o /tmp/icon.png "$base/icons/icon-192.png"
+          test "$(wc -c </tmp/icon.png)" -gt 1000
+          echo "PREVIEW_OK: $base/index.html"
