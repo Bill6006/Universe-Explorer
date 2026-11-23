@@ -2,7 +2,7 @@ name: Build Home Screen Icons
 on:
   push:
     paths:
-      - icon.svg
+      - icon-source.webp
       - .github/workflows/generate-icons.yml
   workflow_dispatch:
 permissions:
@@ -12,11 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Render PNG icons from vector artwork
+      - name: Render PNG icons from selected 2D artwork
         run: |
-          python -m pip install --quiet cairosvg
+          python -m pip install --quiet Pillow
           mkdir -p icons
-          python -c "import cairosvg; [cairosvg.svg2png(url='icon.svg', write_to=f'icons/icon-{n}.png', output_width=n, output_height=n) for n in (192, 512)]"
+          python - <<'PY'
+          from PIL import Image
+          with Image.open("icon-source.webp") as im:
+              im = im.convert("RGB")
+              for size in (192, 512):
+                  im.resize((size, size), Image.Resampling.LANCZOS).save(f"icons/icon-{size}.png", optimize=True)
+          PY
           test -s icons/icon-192.png
           test -s icons/icon-512.png
       - name: Save icons to repository
