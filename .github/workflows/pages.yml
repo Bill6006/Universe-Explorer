@@ -25,9 +25,15 @@ jobs:
           enablement: true
       - name: Generate Android and iOS app icons
         run: |
-          python -m pip install --quiet cairosvg
+          python -m pip install --quiet Pillow
           mkdir -p icons
-          python -c "import cairosvg; [cairosvg.svg2png(url='icon.svg', write_to=f'icons/icon-{n}.png', output_width=n, output_height=n) for n in (192, 512)]"
+          python - <<'PY'
+          from PIL import Image
+          with Image.open("icon-source.webp") as im:
+              im = im.convert("RGB")
+              for size in (192, 512):
+                  im.resize((size, size), Image.Resampling.LANCZOS).save(f"icons/icon-{size}.png", optimize=True)
+          PY
           test -s icons/icon-192.png
           test -s icons/icon-512.png
       - name: Package website
